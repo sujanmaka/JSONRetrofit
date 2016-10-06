@@ -1,70 +1,67 @@
 package com.maka.sujan.jsonretrofit;
 
-import android.content.Context;
+
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
-public class PostDetailAdapter extends BaseAdapter {
+public class PostDetailAdapter extends RecyclerView.Adapter<PostDetailAdapter.ContactViewHolder> {
 
-    Context context;
-    ArrayList<PostDetail> listData;
+    private List<PostDetail> items;
+    private int itemLayout;
 
-    public PostDetailAdapter(Context context,ArrayList<PostDetail> listData){
-        this.context = context;
-        this.listData = listData;
+    public PostDetailAdapter(List<PostDetail> items, int itemLayout){
+        this.items = items;
+        this.itemLayout = itemLayout;
+    }
+
+
+
+    @Override
+    public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
+        return new ContactViewHolder(v);
     }
 
     @Override
-    public int getCount() {
-        return listData.size();
+    public void onBindViewHolder(ContactViewHolder holder, int position) {
+        PostDetail item = items.get(position);
+       /* holder.post.setText(item.getPostId() + "\n" + item.getId() +
+                "\n" + item.getName() + "\n" + item.getEmail() + "\n" + item.getBody());
+*/
+
+        holder.txtViewName.setText(item.getName());
+        holder.txtViewEmail.setText(item.getEmail());
+        holder.txtViewPostId.setText(item.getPostId());
+        holder.txtViewId.setText(item.getId());
+        holder.txtViewBody.setText(item.getBody());
     }
 
     @Override
-    public Object getItem(int position) {
-        return listData.get(position);
+    public int getItemCount() {
+        return items.size();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-    class ViewHolder {
 
-        private TextView txtView;
+    public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-    }
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder = null;
-        if(view == null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.simple_list,null);
-            viewHolder = new ViewHolder();
+       // private TextView post;
+          private TextView txtViewName, txtViewEmail, txtViewPostId, txtViewId, txtViewBody;
 
-            viewHolder.txtView = (TextView) view.findViewById(R.id.txtView);
+        public ContactViewHolder(View v) {
+            super(v);
+          //  post = (TextView) v.findViewById(R.id.txtViewDetail);
+            txtViewName = (TextView) v.findViewById(R.id.txtViewName);
+            txtViewEmail = (TextView) v.findViewById(R.id.txtViewEmail);
+            txtViewPostId = (TextView) v.findViewById(R.id.txtViewPostId);
+            txtViewId = (TextView) v.findViewById(R.id.txtViewId);
+            txtViewBody = (TextView) v.findViewById(R.id.txtViewBody);
 
-            view.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolder) view.getTag();
         }
-
-        PostDetail postDetail = listData.get(position);
-        String postId = String.valueOf(postDetail.getPostId());
-        String id = String.valueOf(postDetail.getId());
-        String name = postDetail.getName();
-        String email = postDetail.getEmail();
-        String body = postDetail.getBody();
-
-
-        viewHolder.txtView.setText("Post Id:  " + postId + "\n" + "Id: " +
-                id + "\n" + "Name: " + name + "\n" + "Email: " + email
-                + "\n" + "Body: " + body);
-        return view;
     }
 }

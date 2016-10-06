@@ -4,8 +4,8 @@ package com.maka.sujan.jsonretrofit;
 public class Post {
 
     //Variables that are in our json
-    private int userId;
-    private int id;
+    private String  userId;
+    private String id;
     private String title;
     private String body;
 
@@ -15,19 +15,19 @@ public class Post {
     }*/
 
     //Getters and setters
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int bookId) {
-        this.userId = bookId;
+    public void setUserId(String  userId) {
+        this.userId = userId;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -4,11 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -25,9 +25,10 @@ public class ShowPostDetails extends AppCompatActivity {
 
     public static final String ROOT_URL = "https://jsonplaceholder.typicode.com/";
 
-    private ListView listView;
+   // private ListView listView;
     private List<PostDetail> posts;
     private String id;
+    private RecyclerView mRecyclerView;
 
     private SQLiteHandler db;
 
@@ -35,11 +36,11 @@ public class ShowPostDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_details1);
+        setContentView(R.layout.activity_show_details);
 
 
 
-       // textViewId = (TextView) findViewById(R.id.textViewId);
+        // textViewId = (TextView) findViewById(R.id.textViewId);
 
 
         //Getting intent
@@ -47,15 +48,15 @@ public class ShowPostDetails extends AppCompatActivity {
         id = intent.getStringExtra("id");
 
 
-        Toast.makeText(this, "You have clicked " + id , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "You have clicked " + id , Toast.LENGTH_SHORT).show();
         //Displaying values by fetching from intent
         //textViewId.setText(String.valueOf(intent.getIntExtra(MainActivity.KEY_ID, 0)));
 
-        listView = (ListView) findViewById(R.id.listViewPost);
+       // listView = (ListView) findViewById(R.id.listViewPost);
         db = new SQLiteHandler(getApplicationContext());
 
         //Calling the method that will fetch data
-       // getPostsDetails();
+        // getPostsDetails();
 
 
 
@@ -72,10 +73,7 @@ public class ShowPostDetails extends AppCompatActivity {
         }
         else
         {
-            Toast.makeText(this, "No connection available ", Toast.LENGTH_SHORT).show();
-            ArrayList<PostDetail> postDetailList = (ArrayList<PostDetail>) db.getAllPostsDetail(id);
-            PostDetailAdapter adapter = new PostDetailAdapter(ShowPostDetails.this,postDetailList);
-            listView.setAdapter(adapter);
+            showList();
 
         }
 
@@ -102,6 +100,15 @@ public class ShowPostDetails extends AppCompatActivity {
 
                 //Storing the data in our list
                 posts = list;
+                db.deletePostsDetail(id);
+
+                for(int i = 0; i< posts.size(); i++){
+
+                    db.addPostDetail(String.valueOf(posts.get(i).getPostId()), String .valueOf(posts.get(i).getId()), posts.get(i).getName(),
+                            posts.get(i).getEmail(), posts.get(i).getBody());
+
+
+                }
 
                 //Calling a method to show the list
                 showList();
@@ -117,35 +124,24 @@ public class ShowPostDetails extends AppCompatActivity {
 
     private void showList(){
 
-        //Delete previously stored database
-        db.deletePostsDetail();
+
+        List<PostDetail> postsList = db.getAllPostsDetail(id);
 
         //String array to store all the book names
-        String[] items = new String[posts.size()];
-
+        String[] items = new String[db.getCommentsIds(id)];
 
         //Traversing through the whole list to get all the names
-        for(int i = 0; i< posts.size(); i++){
+        for (int i = 0; i < db.getCommentsIds(id); i++) {
             //Storing names to string array
-
-            items[i] = "Post Id: " + String.valueOf(posts.get(i).getPostId()) + "\n" + "Id: " +
-                    posts.get(i).getId() + "\n" + "Name: " + posts.get(i).getName() + "\n" + "Email: " + posts.get(i).getEmail()
-                    + "\n" + "Body: " + posts.get(i).getBody();
-
-            db.addPostDetail(String.valueOf(posts.get(i).getPostId()), String .valueOf(posts.get(i).getId()), posts.get(i).getName(),
-                    posts.get(i).getEmail(), posts.get(i).getBody());
-
-
+            items[i] = postsList.get(i).getName();
         }
 
 
-        //Creating an array adapter for list view
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.simple_list, items);
-
-        //Setting adapter to listview
-        listView.setAdapter(adapter);
-
-
+        mRecyclerView = (RecyclerView) findViewById(R.id.card_recycler_view_detail);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(new PostDetailAdapter(db.getAllPostsDetail(id), R.layout.post_card_view_detail));
 
     }
 

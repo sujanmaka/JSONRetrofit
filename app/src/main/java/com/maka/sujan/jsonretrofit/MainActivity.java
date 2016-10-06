@@ -3,18 +3,14 @@ package com.maka.sujan.jsonretrofit;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +20,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 //Class having OnItemClickListener to handle the clicks on list
-public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     //Root URL of our web service
     public static final String ROOT_URL = "https://jsonplaceholder.typicode.com/";
@@ -37,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
 
     //List view to show data
-    private ListView listView;
+  //  private ListView listView;
     private List<Post> posts;
 
     private RecyclerView mRecyclerView;
@@ -51,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         setContentView(R.layout.activity_main);
 
         //Initializing the listview
-        listView = (ListView) findViewById(R.id.listViewPost);
+        //listView = (ListView) findViewById(R.id.listViewPost);
 
 
         db = new SQLiteHandler(getApplicationContext());
@@ -67,17 +63,12 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
               getPosts();
 
             //Setting onItemClickListener to listview
-            listView.setOnItemClickListener(this);
+            //listView.setOnItemClickListener(this);
 
         }
         else
         {
-            Toast.makeText(this, "No connection available ", Toast.LENGTH_SHORT).show();
-            ArrayList<Post> postList = (ArrayList<Post>) db.getAllPosts();
-            PostAdapter adapter = new PostAdapter(MainActivity.this,postList);
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(this);
-
+             showList();
 
         }
 
@@ -105,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
                 //Storing the data in our list
                 posts = list;
+                db.deletePosts();
+                for(int i = 0; i< posts.size(); i++){
+                    db.addPosts(String.valueOf(posts.get(i).getUserId()), String .valueOf(posts.get(i).getId()), posts.get(i).getTitle(), posts.get(i).getBody());
+                }
 
                 //Calling a method to show the list
                 showList();
@@ -120,53 +115,46 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
     //Our method to show list
     private void showList(){
+
+
+        List<Post> postsList = db.getAllPosts();
+
         //String array to store all the book names
-
-            db.deletePosts();
-      //  db.deleteUsers();
-        String[] items = new String[posts.size()];
-
-
-
+        String[] items = new String[db.getIds()];
 
         //Traversing through the whole list to get all the names
-        for(int i = 0; i< posts.size(); i++){
+        for (int i = 0; i < db.getIds(); i++) {
             //Storing names to string array
-            //items[i] = String.valueOf(posts.get(i).getUserId() + posts.get(i).getId());
-
-            items[i] = "User Id: " + String.valueOf(posts.get(i).getUserId()) + "\n" + "Id: " +
-                    posts.get(i).getId() + "\n" + "Title: " + posts.get(i).getTitle() + "\n" + "Body: " + posts.get(i).getBody();
-
-            db.addPosts(String.valueOf(posts.get(i).getUserId()), String .valueOf(posts.get(i).getId()), posts.get(i).getTitle(), posts.get(i).getBody());
-
+            items[i] = postsList.get(i).getTitle();
         }
 
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(new PostAdapter(db.getAllPosts(), R.layout.post_card_view));
 
-        //Creating an array adapter for list view
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.simple_list, items);
 
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int id) {
+                        // TODO Handle item click
+                        Intent intent = new Intent(MainActivity.this, ShowPostDetails.class);
+                        intent.putExtra(KEY_ID, String.valueOf(id + 1));
+                       // System.out.println(String.valueOf(id + 1));
+                        //Starting another activity to show post details
+                        startActivity(intent);
 
-
-        //Setting adapter to listview
-         listView.setAdapter(adapter);
-
+                    }
+                })
+        );
 
 
     }
 
 
     //This method will execute on listitem click
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        //Toast.makeText(this, "the clicked id is " + id+1, Toast.LENGTH_SHORT).show();
-
-        //Creating an intent
-        Intent intent = new Intent(this, ShowPostDetails.class);
-        intent.putExtra(KEY_ID,String.valueOf(id+1));
-
-        //Starting another activity to show post details
-        startActivity(intent);
-    }
 }

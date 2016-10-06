@@ -5,25 +5,25 @@ package com.maka.sujan.jsonretrofit;
  */
 
 public class PostDetail {
-    private int postId;
-    private int id;
+    private String postId;
+    private String id;
     private String name;
     private String email;
     private String body;
 
-    public int getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

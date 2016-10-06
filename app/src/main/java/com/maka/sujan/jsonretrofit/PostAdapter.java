@@ -1,70 +1,68 @@
 package com.maka.sujan.jsonretrofit;
 
-import android.content.Context;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.BaseAdapter;
-        import android.widget.TextView;
 
-        import java.util.ArrayList;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.List;
 
 
-public class PostAdapter extends BaseAdapter {
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ContactViewHolder> {
 
-    Context context;
-    ArrayList<Post> listData;
+    private List<Post> items;
+    private int itemLayout;
 
-    public PostAdapter(Context context,ArrayList<Post> listData){
-        this.context = context;
-        this.listData = listData;
+    public PostAdapter(List<Post> items, int itemLayout){
+        this.items = items;
+        this.itemLayout = itemLayout;
+    }
+
+
+
+    @Override
+    public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
+        return new ContactViewHolder(v);
     }
 
     @Override
-    public int getCount() {
-        return listData.size();
+    public void onBindViewHolder(ContactViewHolder holder, int position) {
+        Post item = items.get(position);
+     //   holder.post.setText(item.getUserId() + "\n" + item.getId() +
+       // "\n" + item.getTitle() + "\n" + item.getBody());
+
+        holder.txtViewTitle.setText(item.getTitle());
+        holder.txtViewUid.setText(item.getUserId());
+        holder.txtViewId.setText(item.getId());
+        holder.txtViewBody.setText(item.getBody());
+
     }
 
     @Override
-    public Object getItem(int position) {
-        return listData.get(position);
+    public int getItemCount() {
+        return items.size();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-    class ViewHolder {
 
-        private TextView txtView;
+    public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-    }
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder = null;
-        if(view == null){
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.simple_list,null);
-            viewHolder = new ViewHolder();
+        //private TextView post;
+        private TextView txtViewTitle, txtViewUid, txtViewId, txtViewBody;
 
-            viewHolder.txtView = (TextView) view.findViewById(R.id.txtView);
 
-            view.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolder) view.getTag();
+        public ContactViewHolder(View v) {
+            super(v);
+          //  post = (TextView) v.findViewById(R.id.txtView);
+
+            txtViewTitle = (TextView) v.findViewById(R.id.txtViewTitle);
+            txtViewUid = (TextView) v.findViewById(R.id.txtViewUserId);
+            txtViewId = (TextView) v.findViewById(R.id.txtViewId);
+            txtViewBody = (TextView) v.findViewById(R.id.txtViewBody);
+
+
         }
-        Post post = listData.get(position);
-        String uId = String.valueOf(post.getUserId());
-        String id = String.valueOf(post.getId());
-        String title = post.getTitle();
-        String body = post.getBody();
-
-
-        viewHolder.txtView.setText("User Id: " + uId + "\n" + "Id: " +
-               id+ "\n" + "Title: " + title + "\n" + "Body: " + body);
-        return view;
     }
-
-
-
 }

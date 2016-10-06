@@ -101,10 +101,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deletePostsDetail() {
+    public void deletePostsDetail(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
-        db.delete(TABLE_COMMENTS, null, null);
+        //db.delete(TABLE_COMMENTS, null, null);
+
+        //Delete previously stored comments
+        db.delete(TABLE_COMMENTS, "comments_postid=?", new String[] { id });
         db.close();
 
         Log.d(TAG, "Deleted all user info from sqlite");
@@ -131,8 +134,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Post post = new Post();
-                post.setUserId(c.getInt((c.getColumnIndex(KEY_POSTS_USERID))));
-                post.setId(c.getInt((c.getColumnIndex(KEY_POSTS_ID))));
+                post.setUserId(c.getString((c.getColumnIndex(KEY_POSTS_USERID))));
+                post.setId(c.getString((c.getColumnIndex(KEY_POSTS_ID))));
                 post.setTitle((c.getString(c.getColumnIndex(KEY_POSTS_TITLE))));
                 post.setBody(c.getString(c.getColumnIndex(KEY_POSTS_BODY)));
 
@@ -161,8 +164,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 PostDetail post = new PostDetail();
-                post.setPostId(c.getInt((c.getColumnIndex(KEY_COMMENTS_POSTID))));
-                post.setId(c.getInt((c.getColumnIndex(KEY_COMMENTS_ID))));
+                post.setPostId(c.getString((c.getColumnIndex(KEY_COMMENTS_POSTID))));
+                post.setId(c.getString((c.getColumnIndex(KEY_COMMENTS_ID))));
                 post.setName((c.getString(c.getColumnIndex(KEY_COMMENTS_NAME))));
                 post.setEmail(c.getString(c.getColumnIndex(KEY_COMMENTS_EMAIL)));
                 post.setBody(c.getString(c.getColumnIndex(KEY_COMMENTS_BODY)));
