@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">JSON Retrofit</string>
     <string name="body">Body:</string>
-    <string name="title">Title:</string>
+    <string name="name">Title:</string>
     <string name="id">Id:</string>
     <string name="user_id">User Id:</string>
     <string name="post_id">Post Id :</string>

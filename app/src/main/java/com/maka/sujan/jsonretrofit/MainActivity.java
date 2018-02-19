@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 posts = list;
                 db.deletePosts();
                 for(int i = 0; i< posts.size(); i++){
-                    db.addPosts(String.valueOf(posts.get(i).getUserId()), String .valueOf(posts.get(i).getId()), posts.get(i).getTitle(), posts.get(i).getBody());
+                    db.addPosts(String.valueOf(posts.get(i).getUserId()), String .valueOf(posts.get(i).getId()), posts.get(i).getName(), posts.get(i).getBody());
                 }
 
                 //Calling a method to show the list
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         //Traversing through the whole list to get all the names
         for (int i = 0; i < db.getIds(); i++) {
             //Storing names to string array
-            items[i] = postsList.get(i).getTitle();
+            items[i] = postsList.get(i).getName();
         }
 
 
@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
         mRecyclerView.setAdapter(new PostAdapter(db.getAllPosts(), R.layout.post_card_view));
 
 

@@ -134,10 +134,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Post post = new Post();
-                post.setUserId(c.getString((c.getColumnIndex(KEY_POSTS_USERID))));
-                post.setId(c.getString((c.getColumnIndex(KEY_POSTS_ID))));
-                post.setTitle((c.getString(c.getColumnIndex(KEY_POSTS_TITLE))));
-                post.setBody(c.getString(c.getColumnIndex(KEY_POSTS_BODY)));
+               // post.setUserId(c.getString((c.getColumnIndex(KEY_POSTS_USERID))));
+               //post.setId(c.getString((c.getColumnIndex(KEY_POSTS_ID))));
+
+
+                post.setName((c.getString(c.getColumnIndex(KEY_POSTS_TITLE))));
+               // post.setBody(c.getString(c.getColumnIndex(KEY_POSTS_BODY)));
 
                 // adding to todo list
                 postsList.add(post);
@@ -167,7 +169,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 post.setPostId(c.getString((c.getColumnIndex(KEY_COMMENTS_POSTID))));
                 post.setId(c.getString((c.getColumnIndex(KEY_COMMENTS_ID))));
                 post.setName((c.getString(c.getColumnIndex(KEY_COMMENTS_NAME))));
-                post.setEmail(c.getString(c.getColumnIndex(KEY_COMMENTS_EMAIL)));
+                post.setUserName(c.getString(c.getColumnIndex(KEY_COMMENTS_EMAIL)));
                 post.setBody(c.getString(c.getColumnIndex(KEY_COMMENTS_BODY)));
 
                 // adding to todo list

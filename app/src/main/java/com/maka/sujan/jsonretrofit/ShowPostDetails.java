@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -105,7 +104,7 @@ public class ShowPostDetails extends AppCompatActivity {
                 for(int i = 0; i< posts.size(); i++){
 
                     db.addPostDetail(String.valueOf(posts.get(i).getPostId()), String .valueOf(posts.get(i).getId()), posts.get(i).getName(),
-                            posts.get(i).getEmail(), posts.get(i).getBody());
+                            posts.get(i).getUserName(), posts.get(i).getBody());
 
 
                 }

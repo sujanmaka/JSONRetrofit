@@ -9,6 +9,6 @@ public interface PostAPI {
     /*Retrofit get annotation with our URL
        And our method that will return us the list ob Post
     */
-    @GET("/posts")
+    @GET("/users")
     public void getPosts(Callback<List<Post>> response);
 }

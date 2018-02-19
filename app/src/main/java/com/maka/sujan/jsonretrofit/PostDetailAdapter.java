@@ -32,11 +32,11 @@ public class PostDetailAdapter extends RecyclerView.Adapter<PostDetailAdapter.Co
     public void onBindViewHolder(ContactViewHolder holder, int position) {
         PostDetail item = items.get(position);
        /* holder.post.setText(item.getPostId() + "\n" + item.getId() +
-                "\n" + item.getName() + "\n" + item.getEmail() + "\n" + item.getBody());
+                "\n" + item.getName() + "\n" + item.getUserName() + "\n" + item.getBody());
 */
 
         holder.txtViewName.setText(item.getName());
-        holder.txtViewEmail.setText(item.getEmail());
+        holder.txtViewEmail.setText(item.getUserName());
         holder.txtViewPostId.setText(item.getPostId());
         holder.txtViewId.setText(item.getId());
         holder.txtViewBody.setText(item.getBody());

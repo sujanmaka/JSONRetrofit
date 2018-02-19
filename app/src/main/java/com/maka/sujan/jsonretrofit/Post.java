@@ -6,12 +6,12 @@ public class Post {
     //Variables that are in our json
     private String  userId;
     private String id;
-    private String title;
+    private String name;
     private String body;
 
 
 
-   /* public Post(int userId, int id, String title, String body) {
+   /* public Post(int userId, int id, String name, String body) {
     }*/
 
     //Getters and setters
@@ -31,12 +31,12 @@ public class Post {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBody() {
